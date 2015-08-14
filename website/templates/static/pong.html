@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<!-- Written by Brendan Roy -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>
+Pong ~ BrendanR
+</title>
+<link href='http://fonts.googleapis.com/css?family=Armata|Junge|Patrick+Hand+SC' rel='stylesheet' type='text/css'>
+</head>
+<body style="text-align: center; top: 20px; width: 100%; margin-left: auto; margin-right: auto; font-family: 'Patrick Hand SC', cursive;">
+<p>A simple game of pong! Red player uses "W" and "S", Blue player uses the Up and Down arrow keys.</p>
+<p>If you think you can handle it, try beating the AI (on MAX difficulty!!111) The AI's difficulty ranges from 1-20.</p>
+<div id="settings">
+Red AI<input id="p1_ai_toggle" type="checkbox"><input type="range" id="p1_ai_difficulty" value="2" min="1" max="20">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="range" id="p2_ai_difficulty" value="2" min="1" max="20"><input id="p2_ai_toggle" type="checkbox"> Blue AI
+</div>
+<div id="container" style="text-align: center; width: 100%; margin-left: auto; margin-right: auto;">
+</div>
+<script type="text/javascript">
+
+var WIDTH, HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT, canvas, container, ctx, P1, P2, Ball, BALL_RADIUS, counter, rebound_colour, rebounds, P1_AI, P1_AI_DIFFICULTY, P2_AI, P2_AI_DIFFICULTY;
+
+function init() {
+	container = document.getElementById('container');
+	
+	WIDTH = 800;
+	HEIGHT = 500;
+	PADDLE_WIDTH = 10;
+	PADDLE_HEIGHT = 100;
+	BALL_RADIUS = 20;
+	counter = 1;
+	rebound_colour = "white";
+	P1_AI = document.getElementById("p1_ai_toggle").checked;
+	P1_AI_DIFFICULTY = document.getElementById("p1_ai_difficulty").value;
+	P2_AI = document.getElementById("p2_ai_toggle").checked;
+	P2_AI_DIFFICULTY = document.getElementById("p2_ai_difficulty").value;
+	
+	canvas = document.createElement("canvas");
+	canvas.width = WIDTH;
+	canvas.height = HEIGHT;
+	container.appendChild(canvas);
+	ctx = canvas.getContext("2d");
+	ctx.fillStyle = "rgb(0, 0, 0)";
+	ctx.fillRect(0, 0, WIDTH, HEIGHT);
+	P1 = new Paddle(PADDLE_WIDTH, PADDLE_HEIGHT, 5, (HEIGHT-PADDLE_HEIGHT)/2, 87, 83);
+	P2 = new Paddle(PADDLE_WIDTH, PADDLE_HEIGHT, WIDTH-PADDLE_WIDTH-5, (HEIGHT-PADDLE_HEIGHT)/2, 38, 40);
+	
+	ball = new Ball((WIDTH-BALL_RADIUS)/2, (HEIGHT-BALL_RADIUS)/2, BALL_RADIUS);
+	
+}
+
+function loop() {
+	P1_AI = document.getElementById("p1_ai_toggle").checked;
+	P1_AI_DIFFICULTY = document.getElementById("p1_ai_difficulty").value;
+	P2_AI = document.getElementById("p2_ai_toggle").checked;
+	P2_AI_DIFFICULTY = document.getElementById("p2_ai_difficulty").value;
+	
+	
+	if (P1_AI == true) {
+		if (ball.y + ball.radius < P1.y + P1.height/4) {
+			P1.vel = -2*P1_AI_DIFFICULTY;
+		}
+		else if (ball.y + ball.radius > P1.y + 3*P1.height/4) {
+			P1.vel = 2*P1_AI_DIFFICULTY;
+		}
+		else{
+			P1.vel = 0;
+		}
+	}
+	
+	if (P2_AI == true) {
+		if (ball.y + ball.radius < P2.y + P2.height/4) {
+			P2.vel = -3*P2_AI_DIFFICULTY;
+		}
+		else if (ball.y + ball.radius > P2.y + 3*P2.height/4) {
+			P2.vel = 3*P2_AI_DIFFICULTY;
+		}
+		else{
+			P2.vel = 0;
+		}
+	}
+	
+	//Move sequence
+	ball.x += ball.xvel*(1+counter/5);
+	ball.y += ball.yvel*(1+counter/5);
+	
+	P1.y += P1.vel;
+	//console.log(P1.vel);
+	P2.y += P2.vel;
+	//console.log(P2.vel);
+	
+	
+	//Rebound Sequence
+	if ((ball.y - ball.radius < 0 && ball.yvel < 0 ) || (ball.y + ball.radius > HEIGHT && ball.yvel > 0 )) {
+		ball.yvel *= -1;
+	}
+	
+	if (ball.x - ball.radius < P1.x + P1.width && (ball.y > P1.y && ball.y < P1.y + P1.height) && ball.xvel < 0) {
+		ball.xvel *= -1;
+		counter++;
+		rebound_colour = "FF7070";
+	}
+	
+	else if (ball.x + ball.radius > P2.x && (ball.y > P2.y && ball.y < P2.y + P2.height) && ball.xvel > 0) {
+		ball.xvel *= -1;
+		counter++;
+		rebound_colour = "8C8CFF";
+	}
+	
+	else if (ball.x - ball.radius < 0 && ball.xvel < 0) {
+		P2.score++;
+		ball.xvel *= -1;
+		counter = 1;
+		rebound_colour = "white";
+	}
+	else if (ball.x + ball.radius > WIDTH && ball.xvel > 0) {
+		P1.score++;
+		ball.xvel *= -1;
+		counter = 1;
+		rebound_colour = "white";
+		
+	}
+	
+	//Keep the paddles on the canvas
+	if (P1.y < 0) {
+		P1.y = 0;
+	}
+	else if (P1.y + P1.height > HEIGHT) {
+		P1.y = HEIGHT - P1.height;
+	}
+	if (P2.y < 0) {
+		P2.y = 0;
+	}
+	else if (P2.y + P2.height > HEIGHT) {
+		P2.y = HEIGHT - P2.height;
+	}
+	
+	
+	//Draw sequence
+	//Paddles
+	ctx.fillStyle = "red";
+	ctx.fillRect(P1.x, P1.y, P1.width, P1.height);
+	ctx.fillStyle = "blue";
+	ctx.fillRect(P2.x, P2.y, P2.width, P2.height);
+	
+	
+	//Ball
+	ctx.fillStyle = rebound_colour;
+	ctx.beginPath();
+	ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2, 0);
+	ctx.fill();
+	
+	
+	//Scores
+	ctx.fillStyle = "grey";
+	ctx.font = "bold 70px Arial";
+	ctx.fillText(P1.score, 100, 100);
+	ctx.fillText(P2.score, WIDTH-140, 100);
+	
+	ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+	ctx.fillRect (0, 0, WIDTH, HEIGHT);
+	
+}
+
+var Paddle = function(width, height, x, y, upcontrol, downcontrol)
+{
+	this.width = width;
+	this.height = height;
+	this.upcontrol = upcontrol;
+	this.downcontrol = downcontrol;
+	this.x = x;
+	this.y = y;
+	this.vel = 0;
+	this.score = 0;
+}
+
+var Ball = function(x, y, radius)
+{
+	this.x = x;
+	this.y = y;
+	this.radius = radius;
+	this.xvel = (Math.floor(Math.random()*2)*2 -1)*3;
+	this.yvel = (Math.floor(Math.random()*2)*2 -1)*3;
+}
+
+init();
+
+document.onkeydown=function(e){
+	var e=window.event || e;
+	if (P1_AI == false) {
+	if (e.keyCode == P1.upcontrol){
+		P1.vel = -5;
+	}
+	if (e.keyCode == P1.downcontrol) {
+		P1.vel = 5;
+	}
+	}
+	if (P2_AI == false) {
+	if (e.keyCode == P2.upcontrol){
+		P2.vel = -5;
+	}
+	if (e.keyCode == P2.downcontrol) {
+		P2.vel = 5;
+	}
+	}
+}
+document.onkeyup=function(e){
+	var e=window.event || e;
+	if (P1_AI == false) {
+	if (e.keyCode == P1.upcontrol)
+		P1.vel = 0;
+	if (e.keyCode == P1.downcontrol) {
+		P1.vel = 0;
+	}
+	}
+	if (P2_AI == false) {
+	if (e.keyCode == P2.upcontrol)
+		P2.vel = 0;
+	if (e.keyCode == P2.downcontrol) {
+		P2.vel = 0;
+	}
+	}
+}
+
+	
+setInterval(loop, 1000/60);
+//Written by Brendan Roy
+</script>
+</body>
+</html>

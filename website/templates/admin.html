@@ -1,0 +1,57 @@
+{%include global/header.html%}
+<div id="container">
+	<a href="/logout" class="plainLink">Logout.</a>
+	<div>
+		Hello, admin.
+	</div>
+	<div style="margin: 10px; ">
+		<div>
+			<form id="main_form" action="/sub_post" method="POST">
+				<input type="text" name="title" placeholder="Title" id="title_input" value="{{ post[1] }}">&nbsp;&nbsp;&nbsp;
+				<input type="text" name="tags"placeholder="Tags" id="tags_input" value="{{ post[2] }}">&nbsp;&nbsp;&nbsp;
+				<input type="text" name="post_id" readonly="readonly" id="post_id" style="width: 3em;" value="{{ post[0] }}">
+				<button type="button" onclick="load()">Load...</button>
+				<button type="button" onclick="del_pg()">Delete</button>&nbsp;&nbsp;&nbsp;
+				<button type="button" onclick="preview()">Preview</button>&nbsp;&nbsp;&nbsp;
+				<button type="submit">Submit!</button><br>
+				<textarea name="content" id="content_input" style="width: 100%; height: 400px;">{{ post[3] }}</textarea><br>
+			</form>
+			<script type="text/javascript">
+				function preview()
+				{
+				document.getElementById("content_preview").innerHTML = document.getElementById("content_input").value
+				document.getElementById("title_preview").innerHTML = document.getElementById("title_input").value
+				document.getElementById("tags_preview").innerHTML = document.getElementById("tags_input").value
+				}
+				
+				function load()
+				{
+				document.getElementById("post_id").value = prompt("Enter a post id to load")
+				document.getElementById("main_form").action = "/admin"
+				document.getElementById("main_form").submit()
+				}
+				
+				function del_pg()
+				{
+				if (confirm("Are you sure you want to delete the post?")){
+					document.getElementById("main_form").action = "/del_post"
+					document.getElementById("main_form").submit()
+				}
+				}
+			</script>
+		</div>
+		<div style="width: 100%">
+			{% include global/blog_post.html %}
+		</div>
+	</div>
+	{% for i in stats %}
+	<p>
+	<b>{{ i }}</b><br>
+	{% for j in stats[i]%}
+	{{j}} - {{stats[i][j]}}<br>
+	{% end %}
+	</p>
+	{% end %}
+</div>
+
+{%include global/footer.html%}

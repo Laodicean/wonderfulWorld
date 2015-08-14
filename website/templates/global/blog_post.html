@@ -1,0 +1,17 @@
+<p style="">
+	<div class="blog_post">
+		<div class="blog_post" style="background-color: #f9c473; margin: -2px; width: 100%; border-radius: 5px 5px 0px 0px;">
+			<span style="text-align:left; display: inline-block; width: 60%; padding-left: 1%;">
+				<a href="{{ post[0] }}" class="plainLink"><span id="title_preview" style=" font-family: 'Actor', cursive; font-size: 30px;">{{ post[1] }}</span></a>
+				<span id="date">{{ post[4] }}</span>
+			</span>
+			<span style="text-align: right; display: inline-block; width: 38%">
+				<span id="tags_preview" style="text-decoration: underline;
+                    color: #5c5c5c">{{ post[2] if post[2] != "None" else "" }}</span>
+			</span>
+		</div>
+		<div id="content_preview" style="padding: 5px;">
+			{{ post[3] }}
+		</div>
+	</div>
+</p>

@@ -1,0 +1,29 @@
+{%include global/header.html%}
+<div class="container">
+	<div class='menu'>
+		<nav style="padding-top: 5px;">
+			<a href="blog"><p class='menu_item' style="top:80px">Archive</p></a>
+			<a href="projects"><p class='menu_item' style="top:110px">Projects</p></a>
+			<a href="random"><p class='menu_item' style="top:140px">Random Stuff</p></a>
+		</nav>
+		<link> <!-- so that the allChess page does not render dynamically, inline, but rather loads a completely new page.-->
+			<a href="/allChess"><p class='menu_item' style="top:170px">allChess</p></a>
+		</link>
+		<div class='column'>
+			<p>
+			Brendan Roy is an aspiring softare engineer.
+			In his spare time he likes to code and game, however he also
+			enjoys playing tennis and chess.</p>
+			<p>
+			In his "study" time he likes to procrastinate, by doing
+			non-essential but more enjoyable things such as working on this website.
+			</p>
+		</div>
+	</div>
+	<div id="content" class="content">
+		<div id="subcontent">
+		{%include global/blog_post.html%}
+		</div>
+	</div>
+</div>
+{%include global/footer.html%}

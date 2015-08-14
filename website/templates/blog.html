@@ -1,0 +1,11 @@
+{%include global/header.html%}
+<div class="container">
+	<div id="content" class="content">
+		<div id="subcontent">
+		{% for post in posts %}
+		{%include global/blog_post.html%}
+		{% end %}
+		</div>
+	</div>
+</div>
+{%include global/footer.html%}

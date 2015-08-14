@@ -1,0 +1,48 @@
+{%include global/header.html%}
+<div class="container">
+	<div id="content" class="content" style="text-align: center;">
+		<div style="width: 50%; float: left;">
+			<p>allChess is a cross-compatible, multiplayer chess program, which places emphasis on holding a low footprint. 
+			Writen in Python and PyQT, it is very stable and fast.</p>
+			<h3>Downloads</h3>Binary - Windows: <a href="https://docs.google.com/uc?export=download&id=0B0Lc07WJTt28QTM1ejF1Xzc3ejg" style="color: blue; text-decoration: underline;">allChess.exe - 7.3 MB</a>
+			<br><br>Source - Windows/Mac/Linux (ZIP): <a href="https://docs.google.com/uc?export=download&id=0B0Lc07WJTt28RU8wU0M2c1N5VW8" style="color: blue; text-decoration: underline;">allChess.zip - 732 KB</a>
+			<div style="text-align: left">
+				<h5>Dependancies (required for source installation):</h5>
+				<ul><a href="http://www.python.org/download/releases/3.3.0/" style="color: blue; text-decoration: underline;">Python 3.3</a><br>
+				<a href="http://www.riverbankcomputing.com/software/pyqt/download" style="color: blue; text-decoration: underline;">PyQT 4</a>. Be sure to get the version for python 3.3.</ul>
+			</div>
+			<div>
+				<h3>Installation</h3>
+				<p>If you are using the binary executable, allChess requires no installation or setup. Simply run the application, 
+				and allow network access if your operating system asks.
+				<p/>
+				<p>If running from source, you will need to make sure that you have python 3.3 and PyQT 4 installed before running 
+				the allChess.py script to run the program. As with the binaries, you may need to give permission for network mutiplayer
+				features to work properly</p>
+			</div>
+			<div>
+				<h3>Usage and Help</h3>
+				<p>To play a game of chess locally (On the one computer) all you need to do is open allChess. The default play
+				mode is local. If you want to start a new game, you can do so by selecting the <b>New Game</b> option from the file
+				menu.</p>
+				<p>If you want to play against a friend over a network, you will need to know the IP address of one of the computers.
+				On that computer, in allChess, select <b>Options > Connect</b>, and then click <b>Host</b>. On the other computer, navigate
+				once again to <b>Options > Connect</b>, however this time, enter the host's IP in the address field. Now click <b>connect</b>. If
+				successful, you should recieve feedback in the <b>Info + Chat</b> text area that you have connected to a partner. You may now
+				chat, and play chess! Once a game has finished, either player may start a new one with <b>File > New game</b>. You can also resign,
+				offer a draw, or disconnect from your opponent through the <b>Options</b> menu. Remember, these features are only available in
+				multiplayer.</p>
+				<p>If you wish, you may change the board orientation with <b>Options > Change Orientation</b>. You may also change your control
+				scheme from <b>2 Click</b> to <b>Select and Move</b> which changes the cursor to the piece you select when you play the game. This
+				can be done under <b>Options > Control Scheme</b>.</p>
+			</div>
+		</div>
+		<div style="width: 50%; float: left; padding-top: 10px;">
+		<img src="/static/img/Example Game.PNG" style="width: 90%; height: 90%; max-width: 666px; max-height: auto;">
+		<br>
+		<img src="/static/img/Network Dialog.PNG" style="width: 90%; height: 90%; max-width: 285px; max-height: auto;">
+		<br>
+		</div>
+	</div>
+</div>
+{%include global/footer.html%}

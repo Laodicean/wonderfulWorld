@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<!-- Written by Brendan Roy -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>
+Fireworks ~ BrendanR
+</title>
+<link href='http://fonts.googleapis.com/css?family=Armata|Junge|Patrick+Hand+SC' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div id="container">
+</div>
+<div style="position:absolute; text-align: center; top: 20px; width: 100%; margin-left: auto; margin-right: auto; color:green; height:25px; font-family: 'Patrick Hand SC', cursive;">
+Click me!<br />Double click... if you can handle it.
+
+<div>
+<script type="text/javascript">
+
+var container, canvas, context;
+var WIDTH, HEIGHT;
+
+var rockets, fragments, colours, mouseX, mouseY, hardcore;
+
+init();
+setInterval(loop, 1000/60);
+
+function init()
+{
+	container = document.getElementById('container');
+
+	WIDTH = window.innerWidth;
+	HEIGHT = window.innerHeight;
+
+	var canvas = document.createElement("canvas");
+	canvas.width = WIDTH -30;
+	canvas.height = HEIGHT-30;
+	container.appendChild(canvas);
+
+	context = canvas.getContext("2d");
+	context.fillStyle = "rgb(0, 0, 0)";
+	context.fillRect (0, 0, WIDTH, HEIGHT);
+	
+	hardcore = 0;
+
+	rockets = new Array();
+	fragments = new Array();
+	colours = ["#FF0000", "#4DD5FF", "#D900FF", "#55FF00", "#F6FF00", "#FFBB00", "#FFFFFF" ];
+
+	window.addEventListener('dblclick', onDoubleClick, false);
+	window.addEventListener('mousedown', onWindowMouseDown, false);
+}
+
+function onDoubleClick(e)
+{
+	
+	if (hardcore != 0)
+	{
+		document.removeEventListener('mousemove', onMouseMove, false)
+		hardcore = 0
+	}
+	else
+	{
+		document.addEventListener('mousemove', onMouseMove, false)
+		hardcore = 1
+	}
+    console.log(hardcore)
+	
+}
+
+function onMouseMove(e)
+{
+	if (!e)
+		var e = window.event; 
+
+	mouseX = e.clientX;
+	mouseY = e.clientY;
+}
+function onWindowMouseDown(e)
+{
+	if (!e)
+		var e = window.event; 
+
+	mouseX = e.clientX;
+	mouseY = e.clientY;
+
+	rockets.push(new Rocket(mouseX, mouseY, 100));
+}
+
+function loop()
+{
+	if (hardcore == 1) {
+		rockets.push(new Rocket(mouseX, mouseY, 100));
+	}
+	
+    context.beginPath();
+	context.lineWidth = 7;
+	for (var i = 0; i < rockets.length; i++)
+	{
+		var rocket = rockets[i];
+		rocket.life ++;
+		rocket.vspeed += .1;
+
+		context.moveTo(rocket.x, rocket.y);
+		context.strokeStyle = "#ff0";
+		
+			
+		rocket.x += rocket.hspeed;
+		rocket.y += rocket.vspeed;
+
+		context.lineTo(rocket.x, rocket.y);
+
+		if ( rocket.x < 0 || rocket.y < 0 || rocket.x > WIDTH || rocket.y > HEIGHT)
+			rockets.splice(i,1);
+
+		if (rocket.life > rocket.lifetime)
+		{
+            rockets.splice(i,1);
+			for(u =0; u!=9; u++){
+                fragments.push(new Fragment(rocket.x, rocket.y, rocket.colour,rocket.colour2,rocket.change,rocket.size, u*60));		
+			}
+			
+		}
+	}
+    context.stroke();
+    context.closePath();
+    context.fillStyle = "rgba(0, 0, 0, 0.1)";
+    context.fillRect (0, 0, WIDTH, HEIGHT);
+	context.lineWidth = 2;
+
+	for (var i = 0; i < fragments.length; i++)
+	{
+        context.beginPath();
+		var fragment = fragments[i];
+		fragment.life ++;
+		fragment.vspeed += .1;
+		
+        context.moveTo(fragment.x, fragment.y);
+		context.strokeStyle = fragment.colour;
+		
+			
+		fragment.x += fragment.hspeed;
+		fragment.y += fragment.vspeed;
+
+		context.lineTo(fragment.x, fragment.y);
+
+		if ( fragment.x < 0 || fragment.y < 0 || fragment.x > WIDTH || fragment.y > HEIGHT)
+			fragments.splice(i,1);
+		if (fragment.life > fragment.lifetime)
+		{
+			fragments.splice(i,1);
+			if (fragment.change > 7) {
+                for(u =0; u!=7; u++) {
+                    fragments.push(new Fragment(fragment.x, fragment.y, fragment.colour2,0,0,fragment.size/1.2, u*70));
+				}
+			}
+		}
+	
+	
+        context.stroke();
+        context.closePath();
+        context.fillStyle = "rgba(0, 0, 0, 0.001)";
+        context.fillRect (0, 0, WIDTH, HEIGHT);
+	}
+	context.beginPath();
+	context.stroke();
+	context.closePath();
+    context.fillStyle = "rgba(0, 0, 0, 0.001)";
+	context.fillRect (0, 0, WIDTH, HEIGHT);
+		
+}
+
+var Rocket = function(x, y, lifetime)
+{
+						
+	this.life = 0;
+	this.colour = colours[Math.floor(Math.random()*colours.length)];
+	this.change = Math.floor(Math.random()*10);
+	this.colour2 = colours[Math.floor(Math.random()*colours.length)];
+	this.lifetime = lifetime;
+	this.size = Math.ceil((Math.random()+1)*5);
+	this.vspeed = Math.random()*5 - 13 ;
+	this.hspeed = (Math.random() - .5) *5;
+	this.x = x;
+	this.y = y;
+}
+
+var Fragment = function(x, y, colour, colour2, change, size, angle)
+{
+	this.life = 0;
+	this.size = size;
+	this.lifetime = Math.ceil(size*2);
+	this.colour = colour;
+	this.colour2 = colour2;
+	this.change = change;
+	this.vspeed = Math.sin(angle) * size;
+	this.hspeed = Math.cos(angle) * size;
+	this.x = x;
+	this.y = y;
+}
+//Written by Brendan Roy
+</script>
+</body>
+</html>
